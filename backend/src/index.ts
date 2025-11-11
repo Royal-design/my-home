@@ -8,6 +8,10 @@ import { errorHandler } from "./middleware/errorHandler";
 import cors from "cors";
 import { corsOptions } from "./config/corsOption";
 import cookieParser from "cookie-parser";
+import register from "./routes/register";
+import auth from "./routes/auth";
+import refresh from "./routes/refresh";
+import logout from "./routes/logout";
 
 const PORT = process.env.PORT || 8000;
 connectDb();
@@ -17,6 +21,11 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+app.use("/register", register);
+app.use("/auth", auth);
+app.use("/refresh", refresh);
+app.use("/logout", logout);
 
 app.use(errorHandler);
 mongoose.connection.once("open", () => {

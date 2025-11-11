@@ -19,3 +19,17 @@ export const errorHandler = (
     message: err.message || "Internal Server Error",
   });
 };
+
+type ErrorWithMessage = {
+  message?: string;
+  [key: string]: any;
+};
+
+export const handleServerError = (
+  res: Response,
+  error: ErrorWithMessage,
+  message: string = "Internal server error"
+) => {
+  console.error(message + ":", error);
+  return res.status(500).json({ success: false, message });
+};
