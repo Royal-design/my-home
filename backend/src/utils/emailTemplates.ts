@@ -25,3 +25,11 @@ export const generateVerificationEmail = (
     </div>
   `;
 };
+
+export const generateWelcomeEmail = (name: string) => `
+  <div style="font-family:Arial,sans-serif">
+    <h2>Welcome, ${name}!</h2>
+    <p>Thanks for joining our platform using your social account.</p>
+    <p>We’re glad to have you here 🎉</p>
+  </div>
+`;
