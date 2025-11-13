@@ -45,9 +45,9 @@ api.interceptors.response.use(
     const data = response.data;
 
     return {
-      success: true,
+      success: data.success,
       message: data?.message || "Request successful",
-      data,
+      data: data.data,
     } as ApiResponse;
   },
   (error: AxiosError): any => {

@@ -1,11 +1,11 @@
-import { LoginForm } from "@/components/login-form";
+import { RegisterForm } from "@/components/register-form";
 import { LandingLayout } from "@/layouts/LandingLayout";
 
-export const Login = () => {
+export const Register = () => {
   return (
     <div>
       <LandingLayout className="md:w-[35%] mt-12 justify-center min-h-dvh">
-        <LoginForm />
+        <RegisterForm />
       </LandingLayout>
     </div>
   );

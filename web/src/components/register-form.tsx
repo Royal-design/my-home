@@ -1,6 +1,10 @@
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,75 +22,57 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { loginSchema, type LoginFormValues } from "@/schemas/login";
-import { Home, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { registerSchema, type RegisterInput } from "@/schemas/register";
+
+import { Mail, Lock, Eye, EyeOff, User, Phone } from "lucide-react";
 import { SocialLogin } from "./SocialLogin";
-import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "@/services/authService";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
-import type { ApiResponse } from "@/utils/htttpRequest";
-import { cn } from "@/lib/utils";
 import { Spinner } from "./ui/spinner";
-import { useAppDispatch } from "@/redux/hooks";
-import { addLoginUser } from "@/redux/slices/authSlice";
+import type { ApiResponse } from "@/utils/htttpRequest";
+import { registerUser } from "@/services/authService";
 
-export function LoginForm() {
+export function RegisterForm({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
   const [showPassword, setShowPassword] = useState(false);
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<RegisterInput>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
+      phoneNumber: "",
     },
   });
 
-  const onSubmit = async (values: LoginFormValues) => {
+  const onSubmit = async (values: RegisterInput) => {
     try {
-      const res = await loginUser(values);
+      const res = await registerUser(values);
 
       if (res.success) {
-        toast.success("Logged in successful!");
-
-        dispatch(addLoginUser(res.data));
-        navigate("/");
+        toast.success("Registration successful!");
         form.reset();
       } else {
         toast.error(res.message);
       }
     } catch (error) {
       const err = error as ApiResponse;
-      toast.error(err?.message || "Login  failed");
+      toast.error(err?.message || "Registration failed");
     }
   };
 
   return (
-    <div className="">
-      <div className="text-center space-y-4 mb-2">
-        <div className="flex items-center justify-center space-x-3">
-          <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-3 rounded-2xl shadow-lg">
-            <Home className="w-7 h-7 text-white" />
-          </div>
-          <div className="text-left">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-              MyHome
-            </h1>
-            <p className="text-xs text-slate-600">
-              Premium Real Estate Platform
-            </p>
-          </div>
-        </div>
-      </div>
-
+    <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="border-2 border-slate-100 shadow-xl shadow-blue-100/50">
         <CardHeader className="text-center space-y-3 pb-6">
           <CardTitle className="text-2xl font-bold text-slate-800">
-            Welcome Back
+            Create an Account
           </CardTitle>
           <CardDescription className="text-base text-slate-600">
-            Sign in to continue your property search
+            Sign up to get started with our platform
           </CardDescription>
         </CardHeader>
 
@@ -97,13 +83,35 @@ export function LoginForm() {
               className="space-y-5"
               noValidate
             >
-              {/* Email Field */}
+              {/* Name */}
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center space-x-2 text-sm font-semibold text-slate-700">
+                      <User className="w-4 h-4 text-blue-600" />
+                      <span>Full Name</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="John Doe"
+                        {...field}
+                        className="min-h-12 border-2 border-slate-200 focus:border-blue-500 rounded-xl transition-all duration-200"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Email */}
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-semibold text-slate-700 flex items-center space-x-2">
+                    <FormLabel className="flex items-center space-x-2 text-sm font-semibold text-slate-700">
                       <Mail className="w-4 h-4 text-blue-600" />
                       <span>Email Address</span>
                     </FormLabel>
@@ -115,18 +123,41 @@ export function LoginForm() {
                         className="min-h-12 border-2 border-slate-200 focus:border-blue-500 rounded-xl transition-all duration-200"
                       />
                     </FormControl>
-                    <FormMessage className="text-sm flex items-center space-x-1" />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
 
-              {/* Password Field */}
+              {/* Phone Number */}
+              <FormField
+                control={form.control}
+                name="phoneNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center space-x-2 text-sm font-semibold text-slate-700">
+                      <Phone className="w-4 h-4 text-blue-600" />
+                      <span>Phone Number</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="tel"
+                        placeholder="08012345678"
+                        {...field}
+                        className="min-h-12 border-2 border-slate-200 focus:border-blue-500 rounded-xl transition-all duration-200"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Password */}
               <FormField
                 control={form.control}
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-semibold text-slate-700 flex items-center space-x-2">
+                    <FormLabel className="flex items-center space-x-2 text-sm font-semibold text-slate-700">
                       <Lock className="w-4 h-4 text-blue-600" />
                       <span>Password</span>
                     </FormLabel>
@@ -151,31 +182,12 @@ export function LoginForm() {
                         </button>
                       </div>
                     </FormControl>
-                    <FormMessage className="text-sm flex items-center space-x-1" />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
 
-              {/* Remember & Forgot Password */}
-              <div className="flex items-center justify-between text-sm pt-1">
-                <label className="flex items-center space-x-2 cursor-pointer group">
-                  <input
-                    type="checkbox"
-                    className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500 cursor-pointer"
-                  />
-                  <span className="text-slate-600 group-hover:text-slate-800 transition-colors">
-                    Remember me
-                  </span>
-                </label>
-                <Button
-                  type="button"
-                  variant="link"
-                  className="text-blue-600 hover:text-blue-700 font-semibold p-0 h-auto"
-                >
-                  Forgot password?
-                </Button>
-              </div>
-
+              {/* Submit Button */}
               <Button
                 type="submit"
                 disabled={form.formState.isSubmitting}
@@ -190,22 +202,23 @@ export function LoginForm() {
                     Submitting
                   </>
                 ) : (
-                  "Sign in"
+                  "Sign Up"
                 )}
               </Button>
             </form>
           </Form>
 
+          {/* Social Login */}
           <SocialLogin />
 
-          {/* Sign Up Link */}
+          {/* Login Link */}
           <p className="text-center text-sm text-slate-600 pt-2">
-            Don't have an account?{" "}
+            Already have an account?{" "}
             <Link
-              to="/signup"
+              to="/signin"
               className="text-blue-600 hover:underline hover:text-blue-700 font-semibold p-0 h-auto"
             >
-              Sign up now
+              Sign in
             </Link>
           </p>
         </CardContent>
