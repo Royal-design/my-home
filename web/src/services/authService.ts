@@ -30,3 +30,15 @@ export const verifyEmail = async ({
 export const forgotPassword = async (payload: { email: string }) => {
   return await httpRequest(`${BASE_URL}/forgot-password`, "post", payload);
 };
+
+export const resetPassword = async (
+  id: string,
+  token: string,
+  payload: { password: string }
+) => {
+  return await httpRequest(
+    `${BASE_URL}/reset-password?id=${id}&token=${token}`,
+    "post",
+    payload
+  );
+};
