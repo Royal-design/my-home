@@ -12,6 +12,9 @@ import register from "./routes/register";
 import auth from "./routes/auth";
 import refresh from "./routes/refresh";
 import logout from "./routes/logout";
+import verifyEmail from "./routes/verify-email";
+import resetPassword from "./routes/resetPassword";
+import forgotPassword from "./routes/forgotPassword";
 
 const PORT = process.env.PORT || 8000;
 connectDb();
@@ -26,6 +29,9 @@ app.use("/register", register);
 app.use("/auth", auth);
 app.use("/refresh", refresh);
 app.use("/logout", logout);
+app.use("/verify-email", verifyEmail);
+app.use("/forgot-password", forgotPassword);
+app.use("/reset-password", resetPassword);
 
 app.use(errorHandler);
 mongoose.connection.once("open", () => {
