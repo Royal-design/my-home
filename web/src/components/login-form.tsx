@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { loginSchema, type LoginFormValues } from "@/schemas/login";
-import { Home, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { SocialLogin } from "./SocialLogin";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "@/services/authService";
@@ -29,6 +29,8 @@ import { cn } from "@/lib/utils";
 import { Spinner } from "./ui/spinner";
 import { useAppDispatch } from "@/redux/hooks";
 import { addLoginUser } from "@/redux/slices/authSlice";
+import { HomeLogo } from "@/icons/HomeLogo";
+import { setFormModal } from "@/redux/slices/modalSlice";
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -66,8 +68,8 @@ export function LoginForm() {
     <div className="">
       <div className="text-center space-y-4 mb-2">
         <div className="flex items-center justify-center space-x-3">
-          <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-3 rounded-2xl shadow-lg">
-            <Home className="w-7 h-7 text-white" />
+          <div className="p-3 rounded-2xl shadow-lg bg-gradient-to-br from-blue-600 to-blue-700">
+            <HomeLogo className="w-7 h-7 text-white" />
           </div>
           <div className="text-left">
             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
@@ -169,6 +171,11 @@ export function LoginForm() {
                 </label>
                 <Button
                   type="button"
+                  onClick={() =>
+                    dispatch(
+                      setFormModal({ isOpen: true, type: "forgot-password" })
+                    )
+                  }
                   variant="link"
                   className="text-blue-600 hover:text-blue-700 font-semibold p-0 h-auto"
                 >

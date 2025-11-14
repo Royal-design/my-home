@@ -53,7 +53,7 @@ export function RegisterForm({
       const res = await registerUser(values);
 
       if (res.success) {
-        toast.success("Registration successful!");
+        toast.success("Registration successful! Please verify your account");
         form.reset();
       } else {
         toast.error(res.message);

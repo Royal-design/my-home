@@ -16,3 +16,17 @@ export const loginUser = async (payload: {
 }) => {
   return await httpRequest(`${BASE_URL}/auth`, "post", payload);
 };
+
+export const verifyEmail = async ({
+  id,
+  token,
+}: {
+  id: string;
+  token: string;
+}) => {
+  return await httpRequest(`${BASE_URL}/verify-email?id=${id}&token=${token}`);
+};
+
+export const forgotPassword = async (payload: { email: string }) => {
+  return await httpRequest(`${BASE_URL}/forgot-password`, "post", payload);
+};
